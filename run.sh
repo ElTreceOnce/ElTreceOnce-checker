@@ -6,7 +6,7 @@ set -e
 cd "$(dirname "$0")/.."
 
 if command -v xvfb-run >/dev/null 2>&1; then
-  exec xvfb-run -a python3 checker/checker.py
+  exec xvfb-run -a python3 checker.py
 else
-  exec python3 checker/checker.py
+  exec python3 checker.py
 fi
