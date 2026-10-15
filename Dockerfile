@@ -2,15 +2,22 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# --- CORRECCIÓN: Crear la carpeta donde va el archivo SQLite ---
-RUN mkdir -p /app/data
-# --------------------------------------------------------------
-
+# Instalar dependencias de sistema (curl es necesario para verificaciones)
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-COPY checker/requirements.txt ./checker/
-RUN pip install --no-cache-dir -r ./checker/requirements.txt
+# Copiar dependencias de Python desde la RAÍZ
+COPY requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY checker/ ./checker/
+# Copiar los scripts de Python desde la RAÍZ
+COPY checker.py ./checker.py
+COPY db.py ./db.py
 
-CMD ["python", "checker/checker.py"]
+# Copiar el script de ejecución desde la RAÍZ
+COPY run.sh ./run.sh
+
+# Dar permisos de ejecución al script run.sh
+RUN chmod +x run.sh
+
+# Comando para iniciar el script
+CMD ["sh", "run.sh"]
